@@ -4,6 +4,3 @@
 /carrieres.html         /carrieres/        301
 /confidentialite.html   /confidentialite/  301
 /merci.html             /merci/            301
-
-# Page 404 anglaise pour toute adresse inexistante sous /en/ (les autres utilisent /404.html).
-/en/*                   /en/404/index.html  404
