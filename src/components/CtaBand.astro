@@ -1,0 +1,134 @@
+---
+import Icon from './Icon.astro';
+import { useT } from '../i18n';
+import { path, type Lang } from '../i18n/routes';
+import { site, telHref } from '../config/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const c = t.cta;
+const phone = site.contact.phone;
+---
+
+<section class="cta-band" aria-labelledby="cta-title">
+  <div class="container">
+    <div class="cta-band__inner" data-reveal>
+      <svg class="cta-band__pattern" aria-hidden="true" viewBox="0 0 400 400" fill="none">
+        <path d="M200 10 365 105v190L200 390 35 295V105Z" stroke="currentColor" stroke-width="1.5"></path>
+        <path d="M200 70 313 135v130L200 330 87 265V135Z" stroke="currentColor" stroke-width="1.5"></path>
+      </svg>
+      <div class="cta-band__copy">
+        <h2 id="cta-title">{c.title[0]} <span>{c.title[1]}</span></h2>
+        <p>{c.text}</p>
+        <ul role="list">
+          {
+            c.perks.map((perk) => (
+              <li>
+                <Icon name="checkCircle" size={18} />
+                {perk}
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+      <div class="cta-band__actions">
+        <a class="btn btn--accent btn--lg" href={path('quote', lang)}>
+          {t.common.requestQuote}
+          <Icon name="arrowRight" />
+        </a>
+        {
+          phone && (
+            <a class="btn btn--light btn--lg" href={telHref(phone)}>
+              <Icon name="phone" />
+              {phone}
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .cta-band {
+    padding-block: clamp(3rem, 6vw, 5rem);
+  }
+  .cta-band__inner {
+    position: relative;
+    overflow: hidden;
+    display: grid;
+    gap: 2rem;
+    align-items: center;
+    padding: clamp(2rem, 5vw, 4rem);
+    border-radius: var(--radius-xl);
+    background:
+      radial-gradient(40rem 25rem at 100% 100%, rgb(70 172 218 / 0.28), transparent 60%),
+      linear-gradient(135deg, var(--navy-800), var(--navy-950));
+    color: #c9d6e4;
+    box-shadow: var(--shadow-lg);
+  }
+  .cta-band__pattern {
+    position: absolute;
+    right: -6rem;
+    top: -5rem;
+    width: 26rem;
+    color: var(--gold-500);
+    opacity: 0.18;
+    pointer-events: none;
+  }
+  .cta-band__copy {
+    position: relative;
+  }
+  h2 {
+    max-width: 18ch;
+    color: #fff;
+    font-size: clamp(1.9rem, 1.3rem + 2.4vw, 3rem);
+  }
+  h2 span {
+    color: var(--blue-500);
+  }
+  p {
+    max-width: 34rem;
+    margin-top: 1rem;
+    font-size: var(--fs-lead);
+  }
+  ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    margin-top: 1.5rem;
+    color: #fff;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+  }
+  li {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+  li :global(svg) {
+    color: var(--gold-500);
+  }
+  .cta-band__actions {
+    position: relative;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  @media (min-width: 60em) {
+    .cta-band__inner {
+      grid-template-columns: 1fr auto;
+    }
+    .cta-band__actions {
+      flex-direction: column;
+    }
+  }
+  @media (max-width: 30em) {
+    .cta-band__actions .btn {
+      width: 100%;
+    }
+  }
+</style>

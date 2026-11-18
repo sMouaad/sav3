@@ -1,0 +1,54 @@
+---
+import Icon from './Icon.astro';
+import { useT } from '../i18n';
+import { path, type Lang } from '../i18n/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const c = useT(lang).home.careers;
+---
+
+<section class="teaser" aria-labelledby="careers-teaser-title">
+  <div class="container teaser__inner">
+    <span class="hex-badge hex-badge--gold"><Icon name="userCheck" /></span>
+    <div class="teaser__copy">
+      <p class="eyebrow">{c.eyebrow}</p>
+      <h2 id="careers-teaser-title">{c.title}</h2>
+      <p>{c.text}</p>
+    </div>
+    <a class="btn btn--ghost btn--lg" href={path('careers', lang)}>
+      {c.cta}
+      <Icon name="arrowRight" />
+    </a>
+  </div>
+</section>
+
+<style>
+  .teaser {
+    padding-block: clamp(2.5rem, 5vw, 3.5rem);
+    border-top: 1px solid var(--line);
+    background: var(--surface-2);
+  }
+  .teaser__inner {
+    display: grid;
+    gap: 1.25rem 2rem;
+    align-items: center;
+  }
+  .eyebrow {
+    margin-bottom: 0.5rem;
+  }
+  h2 {
+    font-size: clamp(1.4rem, 1.2rem + 0.9vw, 1.9rem);
+  }
+  .teaser__copy p:last-child {
+    margin-top: 0.35rem;
+    color: var(--muted);
+  }
+  @media (min-width: 48em) {
+    .teaser__inner {
+      grid-template-columns: auto 1fr auto;
+    }
+  }
+</style>

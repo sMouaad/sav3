@@ -1,0 +1,6 @@
+# Configuration Netlify (déploiement par Git ou par la CLI).
+# Aucun build : le site est statique et publié tel quel depuis ce dossier.
+# Les en-têtes de sécurité et les redirections sont dans les fichiers _headers et _redirects,
+# qui fonctionnent aussi pour un déploiement par glisser-déposer.
+[build]
+  publish = "."

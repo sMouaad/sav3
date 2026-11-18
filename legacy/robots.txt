@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Une fois le domaine définitif connu, ajoutez un sitemap, par exemple :
+# Sitemap: https://www.VOTRE-DOMAINE.ca/sitemap.xml

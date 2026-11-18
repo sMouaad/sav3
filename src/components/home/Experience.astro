@@ -1,0 +1,150 @@
+---
+import Icon from '../Icon.astro';
+import SectionHeading from '../SectionHeading.astro';
+import { useT } from '../../i18n';
+import type { Lang } from '../../i18n/routes';
+import { site } from '../../config/site';
+
+interface Props {
+  lang: Lang;
+}
+const t = useT(Astro.props.lang);
+const e = t.home.experience;
+const { showPartners, partnersApproved, showVenueBrands } = site.references;
+const venueTags = [...(showVenueBrands ? e.venues.brands : e.venues.genericBrands), ...e.venues.others];
+---
+
+<section class="section" aria-labelledby="experience-title">
+  <div class="container">
+    <SectionHeading id="experience-title" eyebrow={e.eyebrow} title={e.title} intro={e.intro} layout="split" />
+
+    <div class:list={['grid', { 'grid--single': !showPartners }]}>
+      {
+        showPartners && (
+          <article class="panel" data-reveal>
+            <span class="hex-badge">
+              <Icon name="userCheck" />
+            </span>
+            <p class="panel__label">{e.partners.label}</p>
+            <h3>{e.partners.title}</h3>
+            <p class="panel__text">{e.partners.text}</p>
+            <ul class="names" role="list">
+              {e.partners.names.map((name) => (
+                <li>{name}</li>
+              ))}
+            </ul>
+            {!partnersApproved && <p class="panel__fine">{e.partners.pending}</p>}
+          </article>
+        )
+      }
+
+      <article class="panel panel--dark" data-reveal>
+        <span class="hex-badge hex-badge--gold">
+          <Icon name="store" />
+        </span>
+        <p class="panel__label">{e.venues.label}</p>
+        <h3>{e.venues.title}</h3>
+        <p class="panel__text">{e.venues.text}</p>
+        <ul class="tags" role="list">
+          {venueTags.map((tag) => <li>{tag}</li>)}
+        </ul>
+        {showVenueBrands && <p class="panel__fine">{e.venues.disclaimer}</p>}
+      </article>
+    </div>
+  </div>
+</section>
+
+<style>
+  .grid {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .panel {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: clamp(1.75rem, 4vw, 2.75rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: linear-gradient(160deg, var(--blue-50), var(--surface) 60%);
+  }
+  .panel .hex-badge {
+    margin-bottom: 1rem;
+  }
+  .panel__label {
+    color: var(--blue-600);
+    font-size: 0.72rem;
+    font-weight: 750;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .panel h3 {
+    font-size: clamp(1.4rem, 1.2rem + 0.8vw, 1.85rem);
+  }
+  .panel__text {
+    max-width: 30rem;
+    color: var(--muted);
+  }
+  .names {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin: 1rem 0 0.5rem;
+  }
+  .names li {
+    padding: 0.75rem 1.25rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--radius-sm);
+    background: var(--surface);
+    color: var(--navy-900);
+    font-size: 1.125rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0 0.5rem;
+  }
+  .tags li {
+    padding: 0.4rem 0.9rem;
+    border: 1px solid rgb(255 255 255 / 0.2);
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.06);
+    color: #fff;
+    font-size: var(--fs-sm);
+    font-weight: 650;
+  }
+  .panel__fine {
+    margin-top: auto;
+    padding-top: 1rem;
+    color: var(--muted);
+    font-size: var(--fs-xs);
+    line-height: 1.6;
+  }
+  .panel--dark {
+    border-color: var(--navy-800);
+    background:
+      radial-gradient(30rem 20rem at 100% 0%, rgb(242 177 60 / 0.14), transparent 60%),
+      var(--navy-800);
+  }
+  .panel--dark h3 {
+    color: #fff;
+  }
+  .panel--dark .panel__label {
+    color: var(--gold-500);
+  }
+  .panel--dark .panel__text,
+  .panel--dark .panel__fine {
+    color: #c9d6e4;
+  }
+  @media (min-width: 60em) {
+    .grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .grid--single {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

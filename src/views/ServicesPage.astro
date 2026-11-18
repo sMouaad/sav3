@@ -1,0 +1,201 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Icon from '../components/Icon.astro';
+import { useT } from '../i18n';
+import { path, type Lang } from '../i18n/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const s = t.services;
+const anchorFor = (key: string) => t.anchors[key as 'commercial' | 'residential' | 'specialized'];
+const badgeTone = ['hex-badge--navy', '', 'hex-badge--gold'];
+---
+
+<BaseLayout
+  lang={lang}
+  routeKey="services"
+  title={s.title}
+  description={s.description}
+  breadcrumbs={[{ name: t.nav.services, href: path('services', lang) }]}
+>
+  <PageHero lang={lang} eyebrow={s.eyebrow} title={s.heading} lead={s.lead} crumb={t.nav.services}>
+    <nav class="jump" aria-label={s.jumpLabel}>
+      <ul role="list">
+        {
+          t.categories.map((cat) => (
+            <li>
+              <a href={`#${anchorFor(cat.key)}`}>
+                <Icon name={cat.icon} size={18} />
+                {cat.short}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </PageHero>
+
+  {
+    t.categories.map((cat, i) => (
+      <section id={anchorFor(cat.key)} class:list={['section', 'category', { 'section--tint': i % 2 === 1 }]} aria-labelledby={`${cat.key}-title`}>
+        <div class="container category__grid">
+          <div class="category__intro">
+            <span class:list={['hex-badge', badgeTone[i]]}>
+              <Icon name={cat.icon} />
+            </span>
+            <p class="eyebrow">0{i + 1} / {cat.short}</p>
+            <h2 id={`${cat.key}-title`}>{cat.name}</h2>
+            <p class="category__lead">{cat.intro}</p>
+            <div class="notice notice--info">
+              <Icon name="info" />
+              <p>
+                <strong>{s.noteLabel}.</strong> {cat.note}
+              </p>
+            </div>
+            <a class="btn" href={path('quote', lang)}>
+              {s.quoteFor}
+              <Icon name="arrowRight" />
+            </a>
+          </div>
+
+          <ul class="services" role="list">
+            {cat.services.map((service) => (
+              <li class="service" data-reveal>
+                <span class="service__icon">
+                  <Icon name={service.icon} />
+                </span>
+                <h3>{service.title}</h3>
+                <p>{service.text}</p>
+                <span class="tag">{service.tag}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    ))
+  }
+
+  <CtaBand lang={lang} />
+</BaseLayout>
+
+<style>
+  .jump ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 2rem;
+  }
+  .jump a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.55rem 1.1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    background: var(--surface);
+    color: var(--navy-900);
+    font-size: var(--fs-sm);
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: var(--shadow-sm);
+    transition:
+      border-color 0.2s var(--ease),
+      background-color 0.2s var(--ease);
+  }
+  .jump a:hover {
+    border-color: var(--navy-800);
+  }
+  .jump :global(svg) {
+    color: var(--blue-600);
+  }
+  .category__grid {
+    display: grid;
+    gap: 2.5rem;
+  }
+  .category__intro .hex-badge {
+    margin-bottom: 1.5rem;
+  }
+  .category__intro h2 {
+    font-size: clamp(1.9rem, 1.4rem + 2vw, 2.75rem);
+  }
+  .category__lead {
+    margin: 1rem 0 1.5rem;
+    color: var(--muted);
+    font-size: var(--fs-lead);
+  }
+  .category__intro .btn {
+    margin-top: 1.75rem;
+  }
+  .services {
+    display: grid;
+    gap: 1rem;
+  }
+  .service {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.6rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    transition:
+      border-color 0.3s var(--ease),
+      box-shadow 0.3s var(--ease),
+      transform 0.3s var(--ease);
+  }
+  .service:hover {
+    transform: translateY(-3px);
+    border-color: var(--blue-300);
+    box-shadow: var(--shadow-md);
+  }
+  .service__icon {
+    display: grid;
+    place-items: center;
+    width: 2.75rem;
+    height: 2.75rem;
+    margin-bottom: 0.5rem;
+    border-radius: 0.8rem;
+    background: var(--blue-50);
+    color: var(--blue-700);
+  }
+  .service__icon :global(svg) {
+    width: 1.35rem;
+    height: 1.35rem;
+  }
+  .service h3 {
+    font-size: 1.125rem;
+  }
+  .service p {
+    color: var(--muted);
+    font-size: var(--fs-sm);
+  }
+  .service .tag {
+    align-self: flex-start;
+    margin-top: auto;
+  }
+  .service p + .tag {
+    margin-top: 0.75rem;
+  }
+  @media (min-width: 40em) {
+    .services {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (min-width: 64em) {
+    .category__grid {
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 4rem;
+      align-items: start;
+    }
+    .category__intro {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+    }
+  }
+</style>

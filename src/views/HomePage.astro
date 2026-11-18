@@ -1,0 +1,37 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Hero from '../components/home/Hero.astro';
+import TrustStrip from '../components/home/TrustStrip.astro';
+import ServicesOverview from '../components/home/ServicesOverview.astro';
+import Sectors from '../components/home/Sectors.astro';
+import Method from '../components/home/Method.astro';
+import Experience from '../components/home/Experience.astro';
+import About from '../components/home/About.astro';
+import Faq from '../components/home/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import CareersTeaser from '../components/CareersTeaser.astro';
+import { useT } from '../i18n';
+import type { Lang } from '../i18n/routes';
+import { faqLd, organizationLd, websiteLd } from '../lib/seo';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const origin = (Astro.site ?? new URL('http://localhost:4321')).origin;
+const jsonLd = [organizationLd(lang, origin, t.home.description), websiteLd(lang, origin), faqLd(t.home.faq.items)];
+---
+
+<BaseLayout lang={lang} routeKey="home" title={t.home.title} description={t.home.description} jsonLd={jsonLd}>
+  <Hero lang={lang} />
+  <TrustStrip lang={lang} />
+  <ServicesOverview lang={lang} />
+  <Sectors lang={lang} />
+  <Method lang={lang} />
+  <Experience lang={lang} />
+  <About lang={lang} />
+  <Faq lang={lang} />
+  <CtaBand lang={lang} />
+  <CareersTeaser lang={lang} />
+</BaseLayout>

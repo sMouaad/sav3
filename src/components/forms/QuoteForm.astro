@@ -1,0 +1,74 @@
+---
+import FormShell from './FormShell.astro';
+import Field from './Field.astro';
+import ChoiceGroup from './ChoiceGroup.astro';
+import Consent from './Consent.astro';
+import Icon from '../Icon.astro';
+import { useT } from '../../i18n';
+import type { Lang } from '../../i18n/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const q = t.quote;
+const f = t.forms;
+---
+
+<div class="form-card">
+  <h2 id="quote-form-title" class="form-card__title">{q.formTitle}</h2>
+  <p class="form-card__note">{f.required}</p>
+
+  <FormShell lang={lang} name="soumission" id="quote-form" labelledby="quote-form-title">
+    <div class="stepper" data-stepper hidden>
+      <p class="stepper__label" data-step-label></p>
+      <ol class="stepper__track" role="list">
+        {q.steps.map((step) => <li class="stepper__item" data-step-item><span>{step}</span></li>)}
+      </ol>
+    </div>
+
+    <section class="form__step" data-step aria-labelledby="quote-step-1">
+      <h3 id="quote-step-1" class="form__step-title" data-step-title tabindex="-1">{q.steps[0]}</h3>
+      <ChoiceGroup id="q-type" name="type_batiment" legend={q.fields.type} options={q.types} variant="cards" required />
+      <Field id="q-service" name="service" label={q.fields.service} as="select" options={q.services} emptyOption={q.choose} required />
+      <div class="form__nav" data-step-nav hidden>
+        <button type="button" class="btn" data-next>{f.next}<Icon name="arrowRight" /></button>
+      </div>
+    </section>
+
+    <section class="form__step" data-step aria-labelledby="quote-step-2">
+      <h3 id="quote-step-2" class="form__step-title" data-step-title tabindex="-1">{q.steps[1]}</h3>
+      <ChoiceGroup id="q-city" name="ville" legend={q.fields.city} options={q.cities} required />
+      <div class="field-row">
+        <Field id="q-area" name="superficie" label={q.fields.area} hint={q.fields.areaHint} placeholder={q.areaPlaceholder} maxlength={80} optionalLabel={t.common.optional} />
+        <Field id="q-frequency" name="frequence" label={q.fields.frequency} as="select" options={q.frequencies} optionalLabel={t.common.optional} />
+      </div>
+      <ChoiceGroup id="q-visit" name="visite" legend={q.fields.visit} options={q.visits} checked={q.visits[0].value} optionalLabel={t.common.optional} />
+      <Field id="q-details" name="details" label={q.fields.details} hint={q.fields.detailsHint} as="textarea" rows={4} maxlength={3000} optionalLabel={t.common.optional} />
+      <div class="form__nav" data-step-nav hidden>
+        <button type="button" class="btn btn--ghost" data-prev><Icon name="arrowLeft" />{f.back}</button>
+        <button type="button" class="btn" data-next>{f.next}<Icon name="arrowRight" /></button>
+      </div>
+    </section>
+
+    <section class="form__step" data-step aria-labelledby="quote-step-3">
+      <h3 id="quote-step-3" class="form__step-title" data-step-title tabindex="-1">{q.steps[2]}</h3>
+      <div class="field-row">
+        <Field id="q-name" name="nom" label={f.fields.name} placeholder={f.placeholders.name} autocomplete="name" maxlength={100} required />
+        <Field id="q-company" name="entreprise" label={f.fields.company} placeholder={f.placeholders.company} autocomplete="organization" maxlength={120} optionalLabel={t.common.optional} />
+      </div>
+      <div class="field-row">
+        <Field id="q-email" name="courriel" type="email" label={f.fields.email} placeholder={f.placeholders.email} autocomplete="email" inputmode="email" maxlength={180} required />
+        <Field id="q-phone" name="telephone" type="tel" label={f.fields.phone} placeholder={f.placeholders.phone} autocomplete="tel" inputmode="tel" maxlength={30} required />
+      </div>
+      <ChoiceGroup id="q-contact" name="contact_prefere" legend={q.fields.contactPref} options={q.contactPrefs} checked={q.contactPrefs[0].value} optionalLabel={t.common.optional} />
+      <Consent lang={lang} id="q-consent" text={f.consent} />
+      <div class="form__nav">
+        <button type="button" class="btn btn--ghost" data-prev data-step-nav hidden><Icon name="arrowLeft" />{f.back}</button>
+        <button type="submit" class="btn btn--accent btn--lg">{q.submit}<Icon name="send" /></button>
+      </div>
+      <p class="form__note"><Icon name="lock" />{f.privacyNote}</p>
+    </section>
+  </FormShell>
+</div>

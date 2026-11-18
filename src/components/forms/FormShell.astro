@@ -1,0 +1,47 @@
+---
+/**
+ * Enveloppe commune des formulaires Netlify Forms.
+ * - Sans JavaScript : envoi classique (POST) puis page de remerciement (attribut action).
+ * - Avec JavaScript (scripts/forms.ts) : validation en français/anglais, étapes, envoi en arrière-plan.
+ * Les noms de champs restent en français pour que toutes les soumissions arrivent dans un format unique.
+ */
+import '../../styles/forms.css';
+import { useT } from '../../i18n';
+import { path, type Lang } from '../../i18n/routes';
+
+interface Props {
+  lang: Lang;
+  /** Nom du formulaire dans Netlify (identique en FR et en EN). */
+  name: 'soumission' | 'candidature';
+  id: string;
+  labelledby: string;
+}
+const { lang, name, id, labelledby } = Astro.props;
+const t = useT(lang);
+const messages = JSON.stringify({ ...t.forms.errors, sending: t.forms.sending, stepOf: t.forms.stepOf });
+---
+
+<form
+  id={id}
+  name={name}
+  method="POST"
+  action={path('thanks', lang)}
+  data-netlify="true"
+  netlify-honeypot="bot-field"
+  class="form"
+  aria-labelledby={labelledby}
+  data-form
+  data-messages={messages}
+>
+  <input type="hidden" name="form-name" value={name} />
+  <input type="hidden" name="langue" value={lang} />
+  <p class="form__hp" aria-hidden="true">
+    <label>Ne pas remplir / Do not fill <input name="bot-field" tabindex="-1" autocomplete="off" /></label>
+  </p>
+  <div class="form__status" data-form-status role="status" aria-live="polite"></div>
+  <slot />
+</form>
+
+<script>
+  import '../../scripts/forms';
+</script>

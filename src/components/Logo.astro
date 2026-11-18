@@ -1,0 +1,52 @@
+---
+/**
+ * Logo SAV3 vectorisé (public/brand/*.svg).
+ * tone="color" sur fond clair ; tone="reversed" (marine → blanc) sur fond foncé.
+ */
+interface Props {
+  tone?: 'color' | 'reversed';
+  class?: string;
+}
+const { tone = 'color', class: className } = Astro.props;
+const suffix = tone === 'reversed' ? '-reversed' : '';
+---
+
+<span class:list={['logo', `logo--${tone}`, className]}>
+  <img class="logo__symbol" src={`/brand/symbol${suffix}.svg`} alt="" width="1636" height="1798" />
+  <span class="logo__text">
+    <img class="logo__wordmark" src={`/brand/wordmark${suffix}.svg`} alt="" width="2063" height="381" />
+    <span class="logo__sub" aria-hidden="true">Corporation Ottawa Ltd</span>
+  </span>
+</span>
+
+<style>
+  .logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    line-height: 1;
+  }
+  .logo__symbol {
+    width: auto;
+    height: 2.6rem;
+  }
+  .logo__text {
+    display: grid;
+    gap: 0.35rem;
+  }
+  .logo__wordmark {
+    width: 5.9rem;
+    height: auto;
+  }
+  .logo__sub {
+    font-size: 0.56rem;
+    font-weight: 750;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    color: var(--navy-800);
+  }
+  .logo--reversed .logo__sub {
+    color: #c9d6e4;
+  }
+</style>

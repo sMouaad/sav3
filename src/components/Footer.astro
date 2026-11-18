@@ -1,0 +1,231 @@
+---
+import Logo from './Logo.astro';
+import Icon from './Icon.astro';
+import { useT } from '../i18n';
+import { otherLang, path, routes, type Lang, type RouteKey } from '../i18n/routes';
+import { site, telHref } from '../config/site';
+
+interface Props {
+  lang: Lang;
+  routeKey: RouteKey;
+}
+const { lang, routeKey } = Astro.props;
+const t = useT(lang);
+const alt = otherLang(lang);
+const year = new Date().getFullYear();
+const { phone, email } = site.contact;
+const anchorFor = { commercial: t.anchors.commercial, residential: t.anchors.residential, specialized: t.anchors.specialized } as const;
+const mottoColors = ['navy', 'blue', 'gold'];
+---
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="site-footer__grid">
+      <div class="site-footer__brand">
+        <a href={path('home', lang)} aria-label={t.common.homeAria} class="site-footer__logo">
+          <Logo tone="reversed" />
+        </a>
+        <p>{t.footer.tagline}</p>
+        <p class="motto">
+          {site.motto.map((word, i) => <span class={`motto__word motto__word--${mottoColors[i]}`}>{word}</span>)}
+        </p>
+      </div>
+
+      <nav class="site-footer__col" aria-labelledby="footer-services">
+        <h2 id="footer-services">{t.footer.servicesTitle}</h2>
+        <ul role="list">
+          {
+            t.categories.map((cat) => (
+              <li>
+                <a href={path('services', lang, anchorFor[cat.key as keyof typeof anchorFor])}>{cat.short}</a>
+              </li>
+            ))
+          }
+          <li><a href={path('quote', lang)}>{t.common.requestQuote}</a></li>
+        </ul>
+      </nav>
+
+      <nav class="site-footer__col" aria-labelledby="footer-company">
+        <h2 id="footer-company">{t.footer.companyTitle}</h2>
+        <ul role="list">
+          <li><a href={path('home', lang, t.anchors.method)}>{t.nav.method}</a></li>
+          <li><a href={path('home', lang, t.anchors.about)}>{t.nav.about}</a></li>
+          <li><a href={path('careers', lang)}>{t.nav.careers}</a></li>
+          <li><a href={path('privacy', lang)}>{t.footer.privacy}</a></li>
+        </ul>
+      </nav>
+
+      <div class="site-footer__col">
+        <h2>{t.footer.regionTitle}</h2>
+        <p class="site-footer__region"><Icon name="mapPin" size={18} /> {t.footer.region}</p>
+        <p class="site-footer__muted">{t.footer.regionNote}</p>
+        <ul role="list" class="site-footer__contact">
+          {phone && <li><a href={telHref(phone)}><Icon name="phone" size={18} />{phone}</a></li>}
+          {email && <li><a href={`mailto:${email}`}><Icon name="mail" size={18} />{email}</a></li>}
+          <li>
+            <a class="site-footer__cta" href={path('quote', lang)}>
+              {t.footer.contact}
+              <Icon name="arrowRight" size={18} />
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="site-footer__bottom">
+      <p>© {year} {site.legalName}. {t.footer.rights}</p>
+      <div class="site-footer__bottom-links">
+        <a href={routes[routeKey][alt]} hreflang={alt} lang={alt}>
+          <Icon name="globe" size={16} />
+          {t.common.lang.label}
+        </a>
+        <a href="#contenu">
+          {t.footer.backToTop}
+          <Icon name="arrowUp" size={16} />
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    position: relative;
+    overflow: hidden;
+    padding-top: clamp(3.5rem, 7vw, 5.5rem);
+    background: var(--navy-950);
+    color: #b9c8da;
+    font-size: var(--fs-sm);
+  }
+  .site-footer::before {
+    content: '';
+    position: absolute;
+    inset: 0 0 auto;
+    height: 4px;
+    background: linear-gradient(90deg, var(--navy-700) 0 40%, var(--blue-500) 40% 72%, var(--gold-500) 72%);
+  }
+  .site-footer__grid {
+    display: grid;
+    gap: 2.5rem 2rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding-bottom: 3rem;
+  }
+  .site-footer__brand {
+    grid-column: 1 / -1;
+    display: grid;
+    gap: 1.1rem;
+    max-width: 22rem;
+  }
+  .site-footer__logo {
+    justify-self: start;
+    border-radius: 8px;
+  }
+  .motto {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1rem;
+    font-size: var(--fs-xs);
+    font-weight: 750;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .motto__word {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #e3ebf5;
+  }
+  .motto__word::before {
+    content: '';
+    width: 0.5rem;
+    height: 0.56rem;
+    clip-path: var(--hex);
+    background: var(--c);
+  }
+  .motto__word--navy {
+    --c: #6f8fcf;
+  }
+  .motto__word--blue {
+    --c: var(--blue-500);
+  }
+  .motto__word--gold {
+    --c: var(--gold-500);
+  }
+  .site-footer h2 {
+    margin-bottom: 1rem;
+    color: #fff;
+    font-size: var(--fs-sm);
+    font-weight: 750;
+    letter-spacing: 0.02em;
+  }
+  .site-footer ul {
+    display: grid;
+    gap: 0.6rem;
+  }
+  .site-footer a {
+    color: #d5e0ee;
+    text-decoration: none;
+    transition: color 0.2s var(--ease);
+  }
+  .site-footer a:hover {
+    color: #fff;
+    text-decoration: underline;
+  }
+  .site-footer__region {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: #fff;
+    font-weight: 650;
+  }
+  .site-footer__region :global(svg),
+  .site-footer__contact :global(svg) {
+    color: var(--blue-500);
+  }
+  .site-footer__muted {
+    margin-top: 0.25rem;
+    color: #9fb3c8;
+  }
+  .site-footer__contact {
+    margin-top: 1rem;
+  }
+  .site-footer__contact a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .site-footer__cta {
+    color: var(--gold-500) !important;
+    font-weight: 750;
+  }
+  .site-footer__bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem 2rem;
+    padding-block: 1.5rem 2rem;
+    border-top: 1px solid rgb(255 255 255 / 0.1);
+    color: #9fb3c8;
+    font-size: var(--fs-xs);
+  }
+  .site-footer__bottom-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+  }
+  .site-footer__bottom-links a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    min-height: 2.75rem;
+  }
+  @media (min-width: 60em) {
+    .site-footer__grid {
+      grid-template-columns: 1.6fr 1fr 1fr 1.2fr;
+    }
+    .site-footer__brand {
+      grid-column: auto;
+    }
+  }
+</style>

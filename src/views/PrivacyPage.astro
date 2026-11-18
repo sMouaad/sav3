@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import Icon from '../components/Icon.astro';
+import { useT } from '../i18n';
+import { htmlLang, path, type Lang } from '../i18n/routes';
+import { site } from '../config/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const p = t.privacy;
+const { finalized, officer, lastUpdated } = site.privacy;
+const updated = new Intl.DateTimeFormat(htmlLang[lang], { dateStyle: 'long', timeZone: 'UTC' }).format(new Date(`${lastUpdated}T12:00:00Z`));
+---
+
+<BaseLayout
+  lang={lang}
+  routeKey="privacy"
+  title={p.title}
+  description={p.description}
+  noindex={!finalized}
+  breadcrumbs={[{ name: p.heading, href: path('privacy', lang) }]}
+>
+  <PageHero lang={lang} eyebrow={p.eyebrow} title={p.heading} lead={p.lead} crumb={p.heading} />
+
+  <section class="section">
+    <div class="container">
+      <article class="prose">
+        <p class="updated">{p.updated} <time datetime={lastUpdated}>{updated}</time></p>
+        {
+          !finalized && (
+            <p class="notice">
+              <Icon name="warning" />
+              <span>{p.draftNotice}</span>
+            </p>
+          )
+        }
+        {
+          p.sections.map((section, i) => (
+            <>
+              <h2>
+                {i + 1}. {section.title}
+              </h2>
+              {section.body.map((para) => (
+                <p>{para}</p>
+              ))}
+            </>
+          ))
+        }
+        <h2>{p.sections.length + 1}. {p.officerTitle}</h2>
+        {
+          officer ? (
+            <p>
+              <strong>{officer.name}</strong>, {officer.title}
+              <br />
+              <a href={`mailto:${officer.email}`}>{officer.email}</a>
+            </p>
+          ) : (
+            <p>{p.officerPending}</p>
+          )
+        }
+      </article>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .updated {
+    color: var(--muted);
+    font-size: var(--fs-sm);
+  }
+  .updated time {
+    color: var(--navy-900);
+    font-weight: 650;
+  }
+  .prose .notice {
+    margin-top: 1.5rem;
+  }
+</style>

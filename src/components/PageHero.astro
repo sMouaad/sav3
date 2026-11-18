@@ -1,0 +1,89 @@
+---
+import Icon from './Icon.astro';
+import { useT } from '../i18n';
+import { path, type Lang } from '../i18n/routes';
+
+interface Props {
+  lang: Lang;
+  eyebrow: string;
+  title: string;
+  lead?: string;
+  /** Dernier élément du fil d'Ariane (page courante). */
+  crumb: string;
+}
+const { lang, eyebrow, title, lead, crumb } = Astro.props;
+const t = useT(lang);
+---
+
+<section class="page-hero">
+  <svg class="page-hero__pattern" aria-hidden="true" viewBox="0 0 600 600" fill="none">
+    <path d="M300 20 542 160v280L300 580 58 440V160Z" stroke="currentColor" stroke-width="1.5"></path>
+    <path d="M300 110 464 205v190L300 490 136 395V205Z" stroke="currentColor" stroke-width="1.5"></path>
+  </svg>
+  <div class="container page-hero__inner">
+    <nav aria-label={t.common.breadcrumb} class="crumbs">
+      <ol role="list">
+        <li><a href={path('home', lang)}>{t.common.home}</a></li>
+        <li aria-hidden="true"><Icon name="arrowRight" size={14} /></li>
+        <li><span aria-current="page">{crumb}</span></li>
+      </ol>
+    </nav>
+    <p class="eyebrow">{eyebrow}</p>
+    <h1>{title}</h1>
+    {lead && <p class="page-hero__lead">{lead}</p>}
+    <slot />
+  </div>
+</section>
+
+<style>
+  .page-hero {
+    position: relative;
+    overflow: hidden;
+    padding-block: clamp(2rem, 5vw, 4rem) clamp(3rem, 6vw, 5rem);
+    border-bottom: 1px solid var(--line);
+    background:
+      radial-gradient(45rem 30rem at 95% 0%, var(--blue-100), transparent 60%),
+      linear-gradient(180deg, var(--surface), var(--surface-2));
+  }
+  .page-hero__pattern {
+    position: absolute;
+    right: -8rem;
+    top: -8rem;
+    width: 34rem;
+    color: var(--blue-500);
+    opacity: 0.16;
+    pointer-events: none;
+  }
+  .page-hero__inner {
+    position: relative;
+  }
+  .crumbs ol {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: clamp(2rem, 4vw, 3rem);
+    color: var(--muted);
+    font-size: var(--fs-xs);
+    font-weight: 600;
+  }
+  .crumbs a {
+    color: var(--muted);
+  }
+  .crumbs a:hover {
+    color: var(--navy-900);
+  }
+  .crumbs span[aria-current] {
+    color: var(--navy-900);
+  }
+  h1 {
+    max-width: 18ch;
+    font-size: clamp(2.3rem, 1.5rem + 3.4vw, 4.25rem);
+  }
+  .page-hero__lead {
+    max-width: 42rem;
+    margin-top: 1.25rem;
+    color: var(--muted);
+    font-size: var(--fs-lead);
+  }
+</style>

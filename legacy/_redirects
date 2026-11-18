@@ -1,0 +1,5 @@
+# Règles de redirection Netlify.
+# Les fichiers internes du dossier ne doivent pas être accessibles publiquement :
+# le README contient des notes internes destinées à la direction et au développeur.
+/README.md      /404.html  404!
+/netlify.toml   /404.html  404!

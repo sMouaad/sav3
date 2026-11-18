@@ -1,0 +1,160 @@
+---
+import { Picture } from 'astro:assets';
+import Icon from '../Icon.astro';
+import SectionHeading from '../SectionHeading.astro';
+import officeImage from '../../assets/photos/corridor-bureaux.jpg';
+import { useT } from '../../i18n';
+import type { Lang } from '../../i18n/routes';
+
+interface Props {
+  lang: Lang;
+}
+const t = useT(Astro.props.lang);
+const s = t.home.sectors;
+const [featured, ...others] = s.items;
+---
+
+<section id={t.anchors.sectors} class="section section--tint" aria-labelledby="sectors-title">
+  <div class="container">
+    <SectionHeading id="sectors-title" eyebrow={s.eyebrow} title={s.title} intro={s.intro} layout="center" />
+
+    <ul class="bento" role="list">
+      <li class="tile tile--photo" data-reveal>
+        <Picture
+          src={officeImage}
+          alt={s.imageAlt}
+          width={1200}
+          widths={[480, 800, 1200]}
+          sizes="(min-width: 60em) 60vw, 100vw"
+          formats={['avif', 'webp']}
+          class="tile__img"
+        />
+        <div class="tile__body">
+          <span class="tile__label">01 / {featured.label}</span>
+          <h3>{featured.title}</h3>
+          <p>{featured.text}</p>
+        </div>
+      </li>
+      {
+        others.map((item, i) => (
+          <li class="tile" data-reveal>
+            <span class="hex-badge hex-badge--sm">
+              <Icon name={item.icon} />
+            </span>
+            <span class="tile__label">
+              0{i + 2} / {item.label}
+            </span>
+            <h3>{item.title}</h3>
+            <p>{item.text}</p>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .bento {
+    display: grid;
+    gap: 1rem;
+  }
+  .tile {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    min-height: 15rem;
+    padding: 1.75rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    overflow: hidden;
+    transition:
+      border-color 0.3s var(--ease),
+      box-shadow 0.3s var(--ease);
+  }
+  .tile:hover {
+    border-color: var(--blue-300);
+    box-shadow: var(--shadow-md);
+  }
+  .tile .hex-badge {
+    margin-bottom: auto;
+  }
+  .tile__label {
+    margin-top: 1.5rem;
+    color: var(--blue-600);
+    font-size: 0.72rem;
+    font-weight: 750;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .tile p {
+    color: var(--muted);
+    font-size: var(--fs-sm);
+  }
+  .tile--photo {
+    min-height: 22rem;
+    justify-content: flex-end;
+    padding: 0;
+    border: 0;
+    background: var(--navy-900);
+  }
+  .tile--photo :global(picture),
+  .tile--photo :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s var(--ease);
+  }
+  .tile--photo:hover :global(img) {
+    transform: scale(1.04);
+  }
+  .tile--photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgb(6 18 43 / 0.05) 20%, rgb(6 18 43 / 0.9) 100%);
+  }
+  .tile__body {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    gap: 0.4rem;
+    padding: 2rem;
+  }
+  .tile--photo h3 {
+    color: #fff;
+    font-size: clamp(1.4rem, 1.2rem + 0.8vw, 1.85rem);
+  }
+  .tile--photo p {
+    max-width: 30rem;
+    color: #d5e0ee;
+  }
+  .tile--photo .tile__label {
+    color: var(--blue-300);
+  }
+  @media (min-width: 40em) {
+    .bento {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .tile--photo,
+    .tile:last-child {
+      grid-column: 1 / -1;
+    }
+  }
+  /* 3 × 3 : la tuile photo occupe 2 colonnes × 2 rangées, les 5 autres complètent la grille */
+  @media (min-width: 60em) {
+    .bento {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+    .tile:last-child {
+      grid-column: auto;
+    }
+    .tile--photo {
+      grid-column: span 2;
+      grid-row: span 2;
+    }
+  }
+</style>

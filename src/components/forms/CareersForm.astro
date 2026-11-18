@@ -1,0 +1,47 @@
+---
+import FormShell from './FormShell.astro';
+import Field from './Field.astro';
+import ChoiceGroup from './ChoiceGroup.astro';
+import Consent from './Consent.astro';
+import Icon from '../Icon.astro';
+import { useT } from '../../i18n';
+import type { Lang } from '../../i18n/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const c = t.careers;
+const f = t.forms;
+---
+
+<div class="form-card">
+  <h2 id="careers-form-title" class="form-card__title">{c.formTitle}</h2>
+  <p class="form-card__note">{f.required}</p>
+
+  <FormShell lang={lang} name="candidature" id="careers-form" labelledby="careers-form-title">
+    <div class="field-row">
+      <Field id="c-name" name="nom" label={f.fields.name} placeholder={f.placeholders.name} autocomplete="name" maxlength={100} required />
+      <Field id="c-phone" name="telephone" type="tel" label={f.fields.phone} placeholder={f.placeholders.phone} autocomplete="tel" inputmode="tel" maxlength={30} required />
+    </div>
+    <Field id="c-email" name="courriel" type="email" label={f.fields.email} placeholder={f.placeholders.email} autocomplete="email" inputmode="email" maxlength={180} required />
+    <ChoiceGroup id="c-city" name="ville" legend={f.fields.city} options={c.cities} required />
+    <Field id="c-experience" name="experience" label={c.fields.experience} as="select" options={c.experiences} optionalLabel={t.common.optional} />
+    <ChoiceGroup
+      id="c-availability"
+      name="disponibilite[]"
+      type="checkbox"
+      legend={c.fields.availability}
+      hint={c.fields.availabilityHint}
+      options={c.availabilities}
+      optionalLabel={t.common.optional}
+    />
+    <Field id="c-message" name="message" label={c.fields.message} hint={c.fields.messageHint} as="textarea" rows={5} maxlength={3000} optionalLabel={t.common.optional} />
+    <Consent lang={lang} id="c-consent" text={c.consent} />
+    <div class="form__nav">
+      <button type="submit" class="btn btn--accent btn--lg">{c.submit}<Icon name="send" /></button>
+    </div>
+    <p class="form__note"><Icon name="info" />{c.cvNote}</p>
+  </FormShell>
+</div>

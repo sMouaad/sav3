@@ -1,0 +1,162 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import CareersForm from '../components/forms/CareersForm.astro';
+import Icon from '../components/Icon.astro';
+import { useT } from '../i18n';
+import { path, type Lang } from '../i18n/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const c = t.careers;
+const tones = ['navy', 'blue', 'gold'];
+---
+
+<BaseLayout
+  lang={lang}
+  routeKey="careers"
+  title={c.title}
+  description={c.description}
+  breadcrumbs={[{ name: t.nav.careers, href: path('careers', lang) }]}
+>
+  <PageHero lang={lang} eyebrow={c.eyebrow} title={c.heading} lead={c.lead} crumb={t.nav.careers} />
+
+  <section class="section section--tint careers">
+    <div class="container careers__grid">
+      <div class="careers__info">
+        <div class="block" data-reveal>
+          <h2>{c.rolesTitle}</h2>
+          <p class="block__intro">{c.rolesIntro}</p>
+          <ul class="roles" role="list">
+            {
+              c.roles.map((role) => (
+                <li>
+                  <span class="hex-badge hex-badge--sm">
+                    <Icon name={role.icon} />
+                  </span>
+                  {role.text}
+                </li>
+              ))
+            }
+          </ul>
+          <p class="block__note">{c.rolesNote}</p>
+        </div>
+
+        <div class="block" data-reveal>
+          <h2>{c.valuesTitle}</h2>
+          <dl class="values">
+            {
+              c.values.map((v, i) => (
+                <div class={`value value--${tones[i]}`}>
+                  <dt lang="en">{v.name}</dt>
+                  <dd>{v.text}</dd>
+                </div>
+              ))
+            }
+          </dl>
+        </div>
+
+        <p class="notice">
+          <Icon name="info" />
+          <span>{c.notice}</span>
+        </p>
+      </div>
+
+      <CareersForm lang={lang} />
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .careers {
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+  }
+  .careers__grid {
+    display: grid;
+    gap: 2.5rem;
+    align-items: start;
+  }
+  .careers__info {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .block {
+    padding: clamp(1.5rem, 3vw, 2rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+  }
+  .block h2 {
+    font-size: 1.35rem;
+  }
+  .block__intro {
+    margin: 0.5rem 0 1.25rem;
+    color: var(--muted);
+    font-size: var(--fs-sm);
+  }
+  .roles {
+    display: grid;
+    gap: 0.75rem;
+  }
+  .roles li {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    color: var(--ink-2);
+    font-weight: 600;
+    font-size: var(--fs-sm);
+  }
+  .block__note {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--line);
+    color: var(--muted);
+    font-size: var(--fs-xs);
+  }
+  .values {
+    display: grid;
+    gap: 0.25rem;
+    margin-top: 1rem;
+  }
+  .value {
+    position: relative;
+    padding: 0.75rem 0 0.75rem 1rem;
+  }
+  .value::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.85rem;
+    bottom: 0.85rem;
+    width: 4px;
+    border-radius: 4px;
+    background: var(--c);
+  }
+  .value--navy {
+    --c: var(--navy-800);
+  }
+  .value--blue {
+    --c: var(--blue-500);
+  }
+  .value--gold {
+    --c: var(--gold-500);
+  }
+  dt {
+    color: var(--navy-900);
+    font-weight: 800;
+    font-size: 1.05rem;
+  }
+  dd {
+    color: var(--muted);
+    font-size: var(--fs-sm);
+  }
+  @media (min-width: 64em) {
+    .careers__grid {
+      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+      gap: 3.5rem;
+    }
+  }
+</style>

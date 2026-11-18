@@ -1,0 +1,24 @@
+---
+import { useT } from '../../i18n';
+import { path, type Lang } from '../../i18n/routes';
+
+interface Props {
+  lang: Lang;
+  id: string;
+  text: string;
+}
+const { lang, id, text } = Astro.props;
+const t = useT(lang);
+---
+
+<div class="field consent" data-field>
+  <label class="consent__label">
+    <input id={id} type="checkbox" name="consentement" value="oui" required aria-describedby={`${id}-error`} />
+    <span class="consent__box" aria-hidden="true"></span>
+    <span>
+      {text} <a href={path('privacy', lang)} target="_blank" rel="noopener">{t.forms.consentLink}<span class="visually-hidden"> {t.forms.newTab}</span></a>.
+      <span class="field__req" aria-hidden="true">*</span>
+    </span>
+  </label>
+  <p class="field__error" id={`${id}-error`} data-error hidden></p>
+</div>

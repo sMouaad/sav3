@@ -1,0 +1,22 @@
+---
+interface Props {
+  id: string;
+  eyebrow: string;
+  /** [texte principal, suite en couleur d'accent] */
+  title: readonly string[] | string[];
+  intro?: string;
+  layout?: 'stack' | 'split' | 'center';
+}
+const { id, eyebrow, title, intro, layout = 'stack' } = Astro.props;
+---
+
+<div class:list={['section-head', { 'section-head--split': layout === 'split', 'section-head--center': layout === 'center' }]}>
+  <div>
+    <p class="eyebrow">{eyebrow}</p>
+    <h2 id={id}>
+      {title[0]}
+      {title[1] && <><br /><span class="accent">{title[1]}</span></>}
+    </h2>
+  </div>
+  {intro && <p>{intro}</p>}
+</div>

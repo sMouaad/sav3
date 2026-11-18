@@ -1,0 +1,135 @@
+---
+import Icon from '../Icon.astro';
+import { useT } from '../../i18n';
+import { path, type Lang } from '../../i18n/routes';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const a = t.home.about;
+const tones = ['navy', 'blue', 'gold'];
+---
+
+<section id={t.anchors.about} class="section section--tint" aria-labelledby="about-title">
+  <div class="container about">
+    <div class="about__copy">
+      <p class="eyebrow">{a.eyebrow}</p>
+      <h2 id="about-title">{a.title[0]}<br /><span class="accent">{a.title[1]}</span></h2>
+      <p class="about__lead">{a.lead}</p>
+      <p class="about__text">{a.text}</p>
+      <a class="btn btn--lg" href={path('quote', lang)}>
+        {a.cta}
+        <Icon name="arrowRight" />
+      </a>
+    </div>
+
+    <div class="values" data-reveal>
+      <div class="values__head">
+        <img src="/brand/symbol.svg" alt="" width="1636" height="1798" />
+        <p>{a.valuesLabel}</p>
+      </div>
+      <dl>
+        {
+          a.values.map((v, i) => (
+            <div class:list={['value', `value--${tones[i]}`]}>
+              <dt lang="en">{v.name}</dt>
+              <dd>{v.text}</dd>
+            </div>
+          ))
+        }
+      </dl>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about {
+    display: grid;
+    gap: clamp(2.5rem, 6vw, 6rem);
+    align-items: center;
+  }
+  .about__lead {
+    margin-top: 1.5rem;
+    color: var(--navy-900);
+    font-size: clamp(1.15rem, 1.05rem + 0.4vw, 1.35rem);
+    font-weight: 650;
+    line-height: 1.55;
+    letter-spacing: -0.01em;
+  }
+  .about__text {
+    max-width: 36rem;
+    margin: 1rem 0 2rem;
+    color: var(--muted);
+  }
+  .values {
+    padding: clamp(1.75rem, 4vw, 2.75rem);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    background: var(--surface);
+    box-shadow: var(--shadow-lg);
+  }
+  .values__head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-bottom: 1.5rem;
+  }
+  .values__head img {
+    width: 3.5rem;
+    height: auto;
+  }
+  .values__head p {
+    color: var(--blue-600);
+    font-size: var(--fs-xs);
+    font-weight: 750;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+  }
+  .value {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 0 1.25rem 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+  .value::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 1.25rem;
+    bottom: 1.25rem;
+    width: 4px;
+    border-radius: 4px;
+    background: var(--c);
+  }
+  .value--navy {
+    --c: var(--navy-800);
+  }
+  .value--blue {
+    --c: var(--blue-500);
+  }
+  .value--gold {
+    --c: var(--gold-500);
+  }
+  dt {
+    color: var(--navy-900);
+    font-size: clamp(1.35rem, 1.2rem + 0.6vw, 1.75rem);
+    font-weight: 800;
+    letter-spacing: -0.03em;
+  }
+  dd {
+    color: var(--muted);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    text-align: right;
+  }
+  @media (min-width: 60em) {
+    .about {
+      grid-template-columns: 1.1fr 0.9fr;
+    }
+  }
+</style>

@@ -1,0 +1,191 @@
+---
+import { Picture } from 'astro:assets';
+import Icon from '../Icon.astro';
+import roomImage from '../../assets/photos/salle-reunion.jpg';
+import { useT } from '../../i18n';
+import { path, type Lang } from '../../i18n/routes';
+import { site } from '../../config/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const m = t.home.method;
+---
+
+<section id={t.anchors.method} class="section section--dark method" aria-labelledby="method-title">
+  <div class="container method__grid">
+    <div class="method__copy">
+      <p class="eyebrow">{m.eyebrow}</p>
+      <h2 id="method-title">{m.title[0]}<br /><span class="accent">{m.title[1]}</span></h2>
+      <p class="method__lead">{m.lead}</p>
+
+      <ol class="steps" role="list">
+        {
+          m.steps.map((step, i) => (
+            <li class="step" data-reveal>
+              <span class="step__num" aria-hidden="true">
+                0{i + 1}
+              </span>
+              <div>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ol>
+
+      <a class="btn btn--accent btn--lg method__cta" href={path('quote', lang)}>
+        {m.cta}
+        <Icon name="arrowRight" />
+      </a>
+    </div>
+
+    <div class="method__media" data-reveal>
+      <div class="method__frame">
+        <Picture
+          src={roomImage}
+          alt={m.imageAlt}
+          width={960}
+          widths={[480, 720, 960]}
+          sizes="(min-width: 64em) 40vw, 100vw"
+          formats={['avif', 'webp']}
+        />
+      </div>
+      <div class="seal">
+        <img src="/brand/symbol.svg" alt="" width="1636" height="1798" class="seal__logo" />
+        <p class="seal__title">{m.seal}</p>
+        <p class="seal__motto">{site.motto.join(' • ')}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .method {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(50rem 30rem at 0% 0%, rgb(70 172 218 / 0.16), transparent 60%),
+      var(--navy-900);
+  }
+  .method__grid {
+    display: grid;
+    gap: clamp(3rem, 6vw, 5rem);
+    align-items: center;
+  }
+  .method__lead {
+    max-width: 34rem;
+    margin-top: 1.25rem;
+    color: #b9c8da;
+    font-size: var(--fs-lead);
+  }
+  .steps {
+    display: grid;
+    margin-top: 2.5rem;
+    counter-reset: step;
+  }
+  .step {
+    position: relative;
+    display: grid;
+    grid-template-columns: 3.25rem 1fr;
+    gap: 1.25rem;
+    padding-bottom: 1.75rem;
+  }
+  /* Ligne de liaison entre les étapes */
+  .step:not(:last-child)::before {
+    content: '';
+    position: absolute;
+    left: calc(1.625rem - 1px);
+    top: 3.4rem;
+    bottom: 0.3rem;
+    width: 2px;
+    background: linear-gradient(var(--blue-500), rgb(70 172 218 / 0.1));
+  }
+  .step__num {
+    display: grid;
+    place-items: center;
+    width: 3.25rem;
+    height: 3.6rem;
+    clip-path: var(--hex);
+    background: var(--gold-500);
+    color: var(--navy-950);
+    font-size: var(--fs-sm);
+    font-weight: 800;
+  }
+  .step h3 {
+    margin-top: 0.35rem;
+    font-size: 1.125rem;
+  }
+  .step p {
+    margin-top: 0.35rem;
+    color: #b9c8da;
+    font-size: var(--fs-sm);
+  }
+  .method__cta {
+    margin-top: 1rem;
+  }
+  .method__media {
+    position: relative;
+    padding-bottom: 3rem;
+  }
+  .method__frame {
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--radius-xl);
+    box-shadow: 0 30px 80px -30px rgb(0 0 0 / 0.6);
+  }
+  .method__frame :global(picture) {
+    width: 100%;
+    height: 100%;
+  }
+  .method__frame :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .seal {
+    position: absolute;
+    right: 1rem;
+    bottom: 0;
+    display: grid;
+    gap: 0.4rem;
+    width: min(15rem, 70%);
+    padding: 1.4rem;
+    border-radius: var(--radius-lg);
+    background: #fff;
+    box-shadow: var(--shadow-lg);
+  }
+  .seal__logo {
+    width: 2.5rem;
+    height: auto;
+    margin-bottom: 0.4rem;
+  }
+  .seal__title {
+    color: var(--navy-900);
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .seal__motto {
+    color: var(--muted);
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+  }
+  @media (min-width: 64em) {
+    .method__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .method__frame {
+      aspect-ratio: 4 / 5;
+    }
+    .seal {
+      right: -1.5rem;
+      bottom: 1.5rem;
+    }
+  }
+</style>

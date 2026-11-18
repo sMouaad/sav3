@@ -1,0 +1,161 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHero from '../components/PageHero.astro';
+import QuoteForm from '../components/forms/QuoteForm.astro';
+import Icon from '../components/Icon.astro';
+import { useT } from '../i18n';
+import { path, type Lang } from '../i18n/routes';
+import { site, telHref } from '../config/site';
+
+interface Props {
+  lang: Lang;
+}
+const { lang } = Astro.props;
+const t = useT(lang);
+const q = t.quote;
+const phone = site.contact.phone;
+---
+
+<BaseLayout
+  lang={lang}
+  routeKey="quote"
+  title={q.title}
+  description={q.description}
+  breadcrumbs={[{ name: q.formTitle, href: path('quote', lang) }]}
+>
+  <PageHero lang={lang} eyebrow={q.eyebrow} title={q.heading} lead={q.lead} crumb={q.formTitle} />
+
+  <section class="section section--tint quote">
+    <div class="container quote__grid">
+      <QuoteForm lang={lang} />
+
+      <aside class="quote__aside" aria-labelledby="process-title">
+        <h2 id="process-title">{q.processTitle}</h2>
+        <ol class="process" role="list">
+          {
+            q.process.map((step, i) => (
+              <li>
+                <span class="process__num" aria-hidden="true">
+                  {i + 1}
+                </span>
+                <div>
+                  <h3>{step.title}</h3>
+                  <p>{step.text}</p>
+                </div>
+              </li>
+            ))
+          }
+        </ol>
+
+        {
+          phone && (
+            <div class="call">
+              <p>{q.callUs}</p>
+              <a class="btn btn--ghost btn--block" href={telHref(phone)}>
+                <Icon name="phone" />
+                {phone}
+              </a>
+            </div>
+          )
+        }
+
+        <ul class="perks" role="list">
+          {
+            t.cta.perks.map((perk) => (
+              <li>
+                <Icon name="checkCircle" size={18} />
+                {perk}
+              </li>
+            ))
+          }
+        </ul>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .quote {
+    padding-top: clamp(2.5rem, 5vw, 4rem);
+  }
+  .quote__grid {
+    display: grid;
+    gap: 2.5rem;
+    align-items: start;
+  }
+  .quote__aside h2 {
+    margin-bottom: 1.5rem;
+    font-size: 1.35rem;
+  }
+  .process {
+    display: grid;
+    gap: 1.25rem;
+  }
+  .process li {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    gap: 1rem;
+  }
+  .process__num {
+    display: grid;
+    place-items: center;
+    width: 2.5rem;
+    height: 2.75rem;
+    clip-path: var(--hex);
+    background: var(--navy-800);
+    color: #fff;
+    font-size: var(--fs-sm);
+    font-weight: 800;
+  }
+  .process h3 {
+    margin-top: 0.2rem;
+    font-size: 1rem;
+  }
+  .process p {
+    margin-top: 0.2rem;
+    color: var(--muted);
+    font-size: var(--fs-sm);
+  }
+  .call {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    padding: 1.25rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--surface);
+  }
+  .call p {
+    color: var(--navy-900);
+    font-weight: 700;
+  }
+  .perks {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    color: var(--ink-2);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+  }
+  .perks li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .perks :global(svg) {
+    color: var(--blue-600);
+  }
+  @media (min-width: 64em) {
+    .quote__grid {
+      grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+      gap: 4rem;
+    }
+    .quote__aside {
+      position: sticky;
+      top: calc(var(--header-h) + 2rem);
+      padding-top: 1rem;
+    }
+  }
+</style>

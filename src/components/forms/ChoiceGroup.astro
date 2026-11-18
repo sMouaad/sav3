@@ -1,0 +1,60 @@
+---
+/**
+ * Groupe de boutons radio ou de cases à cocher, présenté en cartes (avec icône) ou en pastilles.
+ * La valeur transmise (`value`) reste en français ; seul le libellé est traduit.
+ */
+import Icon from '../Icon.astro';
+
+type Option = { value: string; label: string; icon?: string };
+
+interface Props {
+  id: string;
+  name: string;
+  legend: string;
+  options: readonly Option[] | Option[];
+  type?: 'radio' | 'checkbox';
+  variant?: 'cards' | 'pills';
+  required?: boolean;
+  hint?: string;
+  optionalLabel?: string;
+  /** Valeur cochée par défaut. */
+  checked?: string;
+}
+
+const { id, name, legend, options, type = 'radio', variant = 'pills', required = false, hint, optionalLabel, checked } = Astro.props;
+const hintId = hint ? `${id}-hint` : undefined;
+const errorId = `${id}-error`;
+const describedBy = [hintId, errorId].filter(Boolean).join(' ');
+---
+
+<fieldset class:list={['choices', `choices--${variant}`]} data-choice-group data-required={required ? 'true' : undefined} id={id}>
+  <legend class="field__label">
+    {legend}
+    {required ? <span class="field__req" aria-hidden="true">*</span> : optionalLabel && <span class="field__opt">({optionalLabel})</span>}
+  </legend>
+  {hint && <p class="field__hint" id={hintId}>{hint}</p>}
+  <div class="choices__options">
+    {
+      options.map((o, i) => (
+        <label class="choice">
+          <input
+            type={type}
+            name={name}
+            value={o.value}
+            required={type === 'radio' && required && i === 0 ? true : undefined}
+            checked={checked === o.value ? true : undefined}
+            aria-describedby={describedBy}
+          />
+          {o.icon && (
+            <span class="choice__icon">
+              <Icon name={o.icon} />
+            </span>
+          )}
+          <span class="choice__label">{o.label}</span>
+          <span class="choice__mark" aria-hidden="true" />
+        </label>
+      ))
+    }
+  </div>
+  <p class="field__error" id={errorId} data-error hidden></p>
+</fieldset>

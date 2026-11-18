@@ -1,0 +1,16 @@
+# En-têtes HTTP appliqués par Netlify (déploiement Git, CLI ou glisser-déposer du dossier dist/).
+#
+# Content-Security-Policy stricte : le site ne charge AUCUNE ressource externe.
+# Si vous ajoutez un outil tiers (analytics, carte, vidéo, police Web…), ajoutez son domaine
+# dans la directive correspondante, sinon il sera bloqué, et mettez à jour la politique de confidentialité.
+/*
+  Content-Security-Policy: default-src 'self'; img-src 'self'; font-src 'self'; style-src 'self'; script-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'; upgrade-insecure-requests
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin
+
+# Fichiers générés avec une empreinte dans le nom : mise en cache permanente.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable

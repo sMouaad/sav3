@@ -1,0 +1,88 @@
+---
+/**
+ * Champ de formulaire accessible : libellé, aide, message d'erreur relié par aria-describedby.
+ * Les messages d'erreur sont remplis par src/scripts/forms.ts (validation en français ou en anglais).
+ * Sans JavaScript, la validation native du navigateur (required, type="email"…) s'applique.
+ */
+import type { HTMLAttributes } from 'astro/types';
+
+type Option = { value: string; label: string };
+
+interface Props {
+  id: string;
+  name: string;
+  label: string;
+  as?: 'input' | 'textarea' | 'select';
+  type?: HTMLAttributes<'input'>['type'];
+  required?: boolean;
+  hint?: string;
+  optionalLabel?: string;
+  placeholder?: string;
+  autocomplete?: HTMLAttributes<'input'>['autocomplete'];
+  inputmode?: HTMLAttributes<'input'>['inputmode'];
+  maxlength?: number;
+  rows?: number;
+  options?: readonly Option[] | Option[];
+  /** Première option vide d'un select (ex. « Choisissez une option »). */
+  emptyOption?: string;
+  class?: string;
+}
+
+const {
+  id,
+  name,
+  label,
+  as = 'input',
+  type = 'text',
+  required = false,
+  hint,
+  optionalLabel,
+  placeholder,
+  autocomplete,
+  inputmode,
+  maxlength,
+  rows = 4,
+  options = [],
+  emptyOption,
+  class: className,
+} = Astro.props;
+
+const hintId = hint ? `${id}-hint` : undefined;
+const errorId = `${id}-error`;
+const describedBy = [hintId, errorId].filter(Boolean).join(' ');
+---
+
+<div class:list={['field', className]} data-field>
+  <label class="field__label" for={id}>
+    {label}
+    {required ? <span class="field__req" aria-hidden="true">*</span> : optionalLabel && <span class="field__opt">({optionalLabel})</span>}
+  </label>
+  {hint && <p class="field__hint" id={hintId}>{hint}</p>}
+  {
+    as === 'textarea' ? (
+      <textarea id={id} name={name} rows={rows} required={required} maxlength={maxlength} placeholder={placeholder} aria-describedby={describedBy} />
+    ) : as === 'select' ? (
+      <div class="field__select">
+        <select id={id} name={name} required={required} aria-describedby={describedBy}>
+          {emptyOption !== undefined && <option value="">{emptyOption}</option>}
+          {options.map((o) => (
+            <option value={o.value}>{o.label}</option>
+          ))}
+        </select>
+      </div>
+    ) : (
+      <input
+        id={id}
+        name={name}
+        type={type}
+        required={required}
+        placeholder={placeholder}
+        autocomplete={autocomplete}
+        inputmode={inputmode}
+        maxlength={maxlength}
+        aria-describedby={describedBy}
+      />
+    )
+  }
+  <p class="field__error" id={errorId} data-error hidden></p>
+</div>

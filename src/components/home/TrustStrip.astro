@@ -1,0 +1,73 @@
+---
+import Icon from '../Icon.astro';
+import { useT } from '../../i18n';
+import type { Lang } from '../../i18n/routes';
+
+interface Props {
+  lang: Lang;
+}
+const t = useT(Astro.props.lang);
+---
+
+<div class="strip">
+  <ul class="container strip__list" role="list">
+    {
+      t.home.strip.map((item) => (
+        <li>
+          <span class="hex-badge hex-badge--sm"><Icon name={item.icon} /></span>
+          <span>
+            <strong>{item.title}</strong>
+            <span>{item.text}</span>
+          </span>
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<style>
+  .strip {
+    border-block: 1px solid var(--line);
+    background: var(--surface);
+  }
+  .strip__list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  li {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 1.4rem 0.75rem 1.4rem 0;
+  }
+  li > span:last-child {
+    display: grid;
+    line-height: 1.35;
+  }
+  strong {
+    color: var(--navy-900);
+    font-size: var(--fs-sm);
+  }
+  li > span:last-child > span {
+    color: var(--muted);
+    font-size: var(--fs-xs);
+  }
+  li:nth-child(-n + 2) {
+    border-bottom: 1px solid var(--line);
+  }
+  @media (min-width: 60em) {
+    .strip__list {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+    li {
+      padding: 1.75rem 1.5rem;
+      border-bottom: 0 !important;
+    }
+    li + li {
+      border-left: 1px solid var(--line);
+    }
+    li:first-child {
+      padding-left: 0;
+    }
+  }
+</style>

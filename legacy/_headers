@@ -1,0 +1,10 @@
+# En-têtes HTTP appliqués par Netlify (fonctionne avec Git, CLI et glisser-déposer).
+# Si vous ajoutez un outil externe (Google Analytics, carte Google, police Web, autre banque d'images),
+# ajoutez son domaine à la directive correspondante de Content-Security-Policy, sinon il sera bloqué.
+# Quand les photos Unsplash seront remplacées par des fichiers locaux, retirez https://images.unsplash.com.
+/*
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Content-Security-Policy: default-src 'self'; img-src 'self' data: https://images.unsplash.com; script-src 'self'; style-src 'self'; font-src 'self'; connect-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'; object-src 'none'
