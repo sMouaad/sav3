@@ -4,6 +4,7 @@ import '../styles/global.css';
 import fontLatin from '@fontsource-variable/plus-jakarta-sans/files/plus-jakarta-sans-latin-wght-normal.woff2?url';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import MaintenanceNotice from '../components/MaintenanceNotice.astro'; // TEMPORARY MAINTENANCE NOTICE - remove after update
 import { useT } from '../i18n';
 import { htmlLang, ogLocale, otherLang, path, routes, type Lang, type RouteKey } from '../i18n/routes';
 import { breadcrumbLd } from '../lib/seo';
@@ -70,6 +71,7 @@ if (breadcrumbs?.length) {
     {ld.map((data) => <script type="application/ld+json" set:html={JSON.stringify(data)} />)}
   </head>
   <body>
+    <MaintenanceNotice />{/* TEMPORARY MAINTENANCE NOTICE - remove after update */}
     <a class="skip-link" href="#contenu">{t.common.skip}</a>
     <Header lang={lang} routeKey={routeKey} />
     <main id="contenu" tabindex="-1">

@@ -25,6 +25,9 @@ export const site = {
   legalName: 'SAV3 Corporation Ottawa Ltd',
   shortName: 'SAV3',
   motto: ['Power', 'Passion', 'Integrity'] as const,
+
+  /** TEMPORARY MAINTENANCE NOTICE - remove after update (src/components/MaintenanceNotice.astro). false = avis masqué. */
+  maintenanceNotice: true,
   areaServed: ['Ottawa', 'Gatineau'] as const,
 
   /** Coordonnées publiques — À CONFIRMER (README, point 1). */
